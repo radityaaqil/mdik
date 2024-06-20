@@ -28,49 +28,49 @@ from load.loadService import (
 )
 
 def main():
-  # LOAD DATA
-  # dataSet3 = open('./datasource/masterListMovies.json')
-  # dataSet2 = open('./datasource/movies.json')
-  # dataJson3 = json.load(dataSet3)
-  # dataJson2 = json.load(dataSet2)
-
+  # EXTRACT AND TRANSFORM
+  dataSet3 = open('./datasource/masterListMovies.json')
+  dataSet2 = open('./datasource/movies.json')
+  dataJson3 = json.load(dataSet3)
+  dataJson2 = json.load(dataSet2)
 
   # DATASET 1
-  # for val in dataJson3:
-  #   seedGenreTable(val['genre'])
-  #   seedDirectorTable(val['director'])
-  #   seedActorTable(val['actors'])
-  #   seedCountryTable(val['country'])
-  #   seedWriterTable(val['writer'], 1)
-  #   seedLanguageTable(val['language'])
-  # print(seedMovieTable2(dataJson3))
+  for val in dataJson3:
+    seedGenreTable(val['genre'])
+    seedDirectorTable(val['director'])
+    seedActorTable(val['actors'])
+    seedCountryTable(val['country'])
+    seedWriterTable(val['writer'], 1)
+    seedLanguageTable(val['language'])
    
-  # seedMovieTable2(dataJson3)
-  # seedManyToManyTables(dataJson3)
-  # res = awards(dataJson3)
-  # seedMovieAwardTable(res)
+  seedMovieTable2(dataJson3)
+  seedManyToManyTables(dataJson3)
+  res = awards(dataJson3)
+  seedMovieAwardTable(res)
 
   # DATASET 2
-  # for val in dataJson2:
-    # seedGenreTable(val['genre'])
-    # seedDirectorTable(val['director'])
-    # seedActorTable(val['star'])
-    # seedCountryTable(val['country'])
-    # seedWriterTable(val['writer'], 2)
-    # seedCompanyTable(val['company'])
+  for val in dataJson2:
+    seedGenreTable(val['genre'])
+    seedDirectorTable(val['director'])
+    seedActorTable(val['star'])
+    seedCountryTable(val['country'])
+    seedWriterTable(val['writer'], 2)
+    seedCompanyTable(val['company'])
 
-  # seedMovieTable(dataJson2)
-  # seedManyToManyTables(dataJson2)
+  seedMovieTable(dataJson2)
+  seedManyToManyTables(dataJson2)
  
-  # =========================================================
+  # ==================================================================================================================
+  # LOAD
+
   # PLOT GENRES
-  res = getGenreTrendSvc()
+  genreTrend = getGenreTrendSvc()
 
   # Extract years
-  years = [int(d['year']) for d in res]
+  years = [int(d['year']) for d in genreTrend]
 
   # Extract genres
-  genres = list(res[0].keys())[1:]
+  genres = list(genreTrend[0].keys())[1:]
 
   # Prepare data for plotting
   genre_data = {genre: [] for genre in genres}
@@ -94,15 +94,14 @@ def main():
   plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=12)
   plt.grid(True)
   plt.tight_layout()
-  # plt.show()
 
-  # =========================================================
+  # ==================================================================================================================
   # GROSS TREND 3 GENRES (Biography, Action, Crime)
-  res1 = getGrossTrendByGenreSvc()
+  grossTrend = getGrossTrendByGenreSvc()
 
   # Extracting data for plotting
-  genres = [entry['genre'] for entry in res1]
-  averages_millions = [entry['average'] / 1000000 for entry in res1]  # Scaling to millions of dollars
+  genres = [entry['genre'] for entry in grossTrend]
+  averages_millions = [entry['average'] / 1000000 for entry in grossTrend]  # Scaling to millions of dollars
 
   # Plotting the bar graph
   plt.figure(figsize=(10, 6))
@@ -119,14 +118,13 @@ def main():
 
   # Display the plot
   plt.tight_layout()
-  # plt.show()
 
-  # =========================================================
+  # ==================================================================================================================
   # PLOT DIRECTOR
-  res3 = getMoviesByDirectorSvc()
+  moviesByDirector = getMoviesByDirectorSvc()
 
-  directors = [entry['director'] for entry in res3]
-  averages = [entry['average'] for entry in res3]
+  directors = [entry['director'] for entry in moviesByDirector]
+  averages = [entry['average'] for entry in moviesByDirector]
 
   # Plotting
   plt.figure(figsize=(12, 8))  # Optional: adjust figure size
@@ -137,11 +135,11 @@ def main():
   plt.tight_layout()  # Optional: adjust layout
   # plt.show()
 
-  # =========================================================
-  res4 = getMoviesByActorSvc()
+  # ==================================================================================================================
+  moviesByActors = getMoviesByActorSvc()
 
-  actors = [entry['actor'] for entry in res4]
-  averageVal = [entry['average'] for entry in res4]
+  actors = [entry['actor'] for entry in moviesByActors]
+  averageVal = [entry['average'] for entry in moviesByActors]
 
   # Plotting
   plt.figure(figsize=(12, 8))  # Optional: adjust figure size
@@ -153,11 +151,10 @@ def main():
   # plt.show()
 
   # ========================================================
-  res5 = getMoviesByWriterSvc()
-  # print(res5)
+  moviesByWriter = getMoviesByWriterSvc()
 
-  writers = [entry['writer'] for entry in res5]
-  averageVal1 = [entry['average'] for entry in res5]
+  writers = [entry['writer'] for entry in moviesByWriter]
+  averageVal1 = [entry['average'] for entry in moviesByWriter]
 
   # Plotting
   plt.figure(figsize=(12, 8))  # Optional: adjust figure size
@@ -168,33 +165,13 @@ def main():
   plt.tight_layout()  # Optional: adjust layout
   # plt.show()
 
-  # =========================================================
-  res6 = getMovieByRuntimeAndScoreSvc()
+  # ==================================================================================================================
+  movireByRuntimeAndScore = getMovieByRuntimeAndScoreSvc()
 
-  ratings = [entry[1] for entry in res6]
-  durations = [entry[2] for entry in res6]
+  ratings = [entry[1] for entry in movireByRuntimeAndScore]
+  durations = [entry[2] for entry in movireByRuntimeAndScore]
 
-  # # Plotting the scatter plot
-  # plt.figure(figsize=(10, 6))  # Optional: set the figure size
-
-  # plt.scatter(ratings, durations, marker='o', c='blue', edgecolors='black', s=100)
-
-  # # Adding labels and title
-  # plt.title('IMDb Ratings vs Durations of Movies')
-  # plt.xlabel('IMDb Ratings')
-  # plt.ylabel('Duration (minutes)')
-
-  # # Adding movie names as annotations
-  # for i, movie in enumerate(movies):
-  #     plt.annotate(movie, (ratings[i], durations[i]), textcoords="offset points", xytext=(0,10), ha='center')
-
-  # # Display the plot
-  # plt.grid(True)
-  # plt.tight_layout()
-  # plt.show()
-  # Plotting the scatter plot
   plt.figure(figsize=(10, 6))  # Optional: set the figure size
-
   plt.scatter(durations, ratings, marker='o', c='blue', edgecolors='black', s=100)
 
   # Adding labels and title
